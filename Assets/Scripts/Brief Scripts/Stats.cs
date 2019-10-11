@@ -80,7 +80,10 @@ public class Stats : MonoBehaviour
             currentXp += result;
             if (currentXp >= xpThreshold)
             {
-                LevelUp();
+                while(currentXp >= xpThreshold)
+                {
+                    LevelUp();
+                }
                 Debug.Log("Draw XP given!");
             }
             else
@@ -96,7 +99,10 @@ public class Stats : MonoBehaviour
             currentXp += result;
             if (currentXp >= xpThreshold)
             {
-                LevelUp();
+                while (currentXp >= xpThreshold)
+                {
+                    LevelUp();
+                }   
                 Debug.Log("Win XP given!");
             }
             else
@@ -133,11 +139,13 @@ public class Stats : MonoBehaviour
 
         // We are taking an amount of points to assign in, and we want to assign it to our luck, style and rhythm, we 
         // want some random amount of points added to our current values.
-        style += Random.Range(0, PointsToAssign);
-        PointsToAssign -= style;
-        luck += Random.Range(0, PointsToAssign);
-        PointsToAssign -= luck;
-        rhythm += PointsToAssign;
+        int givenPoints = Random.Range(0, PointsToAssign);
+        style += givenPoints;
+        int remainingPoints = PointsToAssign - givenPoints;
+        givenPoints = Random.Range(0, remainingPoints);
+        luck += givenPoints;
+        remainingPoints -= givenPoints;
+        rhythm += remainingPoints;
     }
 
     /// <summary>
