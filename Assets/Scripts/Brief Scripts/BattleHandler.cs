@@ -31,15 +31,36 @@ public static class BattleHandler
             Debug.LogWarning("Player or NPC battle points is 0, most likely the logic has not be setup for this yet");
         }
 
-        // if the player wins then the battle outcome is 1
-        // if the npc has won, then the battle outcome is -1
-        // otherwise the outcome is 0 and its a draw;
-        battleOutcome = 1;
+        if(playerPoints > npcPoints)
+        {
+            Debug.Log("Player has won with" + playerPoints + "points!");
+            battleOutcome = 1 - ((float)npcPoints / (float)playerPoints);
+            data.player.CalculateXP(battleOutcome);
+            battleOutcome = 1;
+        }
+        else if(npcPoints > playerPoints)
+        {
+            Debug.Log("NPC has won with" + npcPoints + "points!");
+            battleOutcome = 1 - ((float)playerPoints / (float)npcPoints);
+            data.npc.CalculateXP(battleOutcome);
+            battleOutcome = -1;
+        }
+        else if(npcPoints == playerPoints)
+        {
+            Debug.Log("It's a draw!");
+            battleOutcome = 0.1f;
+            data.player.CalculateXP(battleOutcome);
+            data.npc.CalculateXP(battleOutcome);
+            battleOutcome = 0;
+        }
+        else
+        {
+            Debug.LogWarning("Player or NPC battle points is 0, most likely something has gone wrong with the logic");
+        }
 
+        // if the player wins then the battle outcome is 1
         // we probably want to do some sort of check here to see if the player has won...rather than assigning xp everytime.
-        // if so set points.
-        data.player.CalculateXP(battleOutcome);
-        battleOutcome = 1;         
+        // if so set points.    
         // If we wanted to we could also work out if the npc has won or if there is a draw!
 
         var results = new BattleResultEventData(data.player, data.npc, battleOutcome);

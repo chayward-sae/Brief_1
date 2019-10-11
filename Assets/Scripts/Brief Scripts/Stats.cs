@@ -43,26 +43,24 @@ public class Stats : MonoBehaviour
     private void Start()
     {
         // We probably want to call our InitialStats function here.
-        InitialStats(availableStartingSkillPoints);
+        InitialStats();
     }
 
     /// <summary>
     /// A function used to handle setting the intial stats of our game at the begining of the game.
     /// </summary>
-    private void InitialStats(Stats.availableStartingSkillPoints)
+    private void InitialStats()
     {
         Debug.LogWarning("Initial stats has been called");
         // We probably want to set out default level and some default random stats 
         // for our luck, style and rythmn.
-        float startingSkillPoints = 
+        int skillPoints = availableStartingSkillPoints;
         level = 1;
-        style = Random.Range(0f, startingSkillPoints);
-        startingSkillPoints -= style;
-        float luck = Random.Range(0f, startingSkillPoints);
-        startingSkillPoints -= luck;
-        float rhythm = startingSkillPoints;
-
-
+        style = Random.Range(0, skillPoints);
+        skillPoints -= style;
+        luck = Random.Range(0, skillPoints);
+        skillPoints -= luck;
+        rhythm = skillPoints;
     }
 
     /// <summary>
@@ -75,8 +73,19 @@ public class Stats : MonoBehaviour
         Debug.LogWarning("This character needs some xp to be given, the outcome of the fight was: " + BattleOutcome);
         // The result of the battle is coming in which is stored in BattleOutcome .... we probably want to do something with it to calculate XP.
 
+        if(BattleOutcome == 0.1)
+        {
+            int result = (int)(0.1 * 10);
+            GameEvents.PlayerXPGain(result);
+        }
+        else
+        {
+            int result = (int)(BattleOutcome * Random.Range(0f, 10f) * 10);
+            GameEvents.PlayerXPGain(result);
+        }
+        
         //Called when we want to display how much xp we won, by default it is 0
-        GameEvents.PlayerXPGain(0);
+        
 
         // We probably also want to check to see if the player can level up and if so do something....
     }
@@ -90,6 +99,11 @@ public class Stats : MonoBehaviour
         //We probably want to increase the player level, the xp threshold and increase our current skill points based on our level.
         GameEvents.PlayerLevelUp(level);
         Debug.LogWarning("Level up has been called");
+        if(currentXp > xpThreshold)
+        {
+            level += 1;
+            xpThreshold += 10;
+        }
     }
     
     /// <summary>
@@ -113,7 +127,9 @@ public class Stats : MonoBehaviour
         // to ensure that there is not always a draw, by default it just returns 0. 
         // If you right click this function and find all references you can see where it is called.
         Debug.LogWarning("ReturnBattlePoints has been called we probably want to create some battle points based on our stats");
-        return 0;
+        int cool = Random.Range(0, 10);
+        int result = (luck + style + rhythm * cool);
+        return result;
     }
 
 }
