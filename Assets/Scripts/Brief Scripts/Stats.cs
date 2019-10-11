@@ -123,7 +123,7 @@ public class Stats : MonoBehaviour
     private void LevelUp()
     {
         level += 1;
-        xpThreshold += 10;
+        xpThreshold += (10 * level);
         AssignSkillPointsOnLevelUp(10);
         //We probably want to increase the player level, the xp threshold and increase our current skill points based on our level.
         GameEvents.PlayerLevelUp(level);
