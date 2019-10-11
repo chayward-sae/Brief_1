@@ -77,11 +77,32 @@ public class Stats : MonoBehaviour
         {
             int result = (int)(0.1 * 10);
             GameEvents.PlayerXPGain(result);
+            currentXp += result;
+            if (currentXp >= xpThreshold)
+            {
+                LevelUp();
+                Debug.Log("Draw XP given!");
+            }
+            else
+            {
+                Debug.Log("Not enough XP to level up!");
+            }
+            
         }
         else
         {
             int result = (int)(BattleOutcome * Random.Range(0f, 10f) * 10);
             GameEvents.PlayerXPGain(result);
+            currentXp += result;
+            if (currentXp >= xpThreshold)
+            {
+                LevelUp();
+                Debug.Log("Win XP given!");
+            }
+            else
+            {
+                Debug.Log("Not enough XP to level up!");
+            }
         }
         
         //Called when we want to display how much xp we won, by default it is 0
@@ -95,15 +116,12 @@ public class Stats : MonoBehaviour
     /// </summary>
     private void LevelUp()
     {
-
+        level += 1;
+        xpThreshold += 10;
+        AssignSkillPointsOnLevelUp(10);
         //We probably want to increase the player level, the xp threshold and increase our current skill points based on our level.
         GameEvents.PlayerLevelUp(level);
         Debug.LogWarning("Level up has been called");
-        if(currentXp > xpThreshold)
-        {
-            level += 1;
-            xpThreshold += 10;
-        }
     }
     
     /// <summary>
@@ -115,6 +133,11 @@ public class Stats : MonoBehaviour
 
         // We are taking an amount of points to assign in, and we want to assign it to our luck, style and rhythm, we 
         // want some random amount of points added to our current values.
+        style += Random.Range(0, PointsToAssign);
+        PointsToAssign -= style;
+        luck += Random.Range(0, PointsToAssign);
+        PointsToAssign -= luck;
+        rhythm += PointsToAssign;
     }
 
     /// <summary>
